@@ -79,6 +79,7 @@ namespace MiniSupermarket.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Category updateCat)
         {
+            // bat đầu kiểm tra dữ liệu đầu vào
             var cat = _categories.FirstOrDefault(c => c.CategoryId == id);
             if (cat == null)
             {
