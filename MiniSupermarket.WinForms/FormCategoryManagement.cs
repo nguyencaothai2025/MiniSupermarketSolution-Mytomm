@@ -1,10 +1,12 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Windows.Forms;
 
 namespace MiniSupermarket.WinForms
 {
     public partial class FormCategoryManagement : Form
     {
+
 
         // Khởi tạo HttpClient tĩnh kết nối trực tiếp đến Web API (Đảm bảo số Port https://localhost:7123 khớp với API của bạn)
         private static readonly HttpClient _client = new HttpClient
@@ -17,27 +19,46 @@ namespace MiniSupermarket.WinForms
             InitializeComponent();
         }
 
+
         // Sự kiện Form vừa bật lên: Tự động tải dữ liệu từ API lên bảng
         private async void FormCategoryManagement_Load(object sender, EventArgs e)
         {
             await LoadDataAsync();
         }
 
+        // Bổ sung phương thức cấu hình HttpClient có gắn kèm Token bảo mật
+        private HttpClient GetAuthenticatedClient()
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7012/api/")
+            };
+
+            // Đính kèm Token vào Header theo chuẩn Bearer Authentication
+            if (!string.IsNullOrEmpty(SessionManager.JwtToken))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionManager.JwtToken);
+            }
+            return client;
+        }
+
         // Hàm dùng chung: Gọi API GET lấy danh sách và đổ lên DataGridView
+        // Ví dụ áp dụng khi gọi hàm tải dữ liệu LoadDataAsync():
         private async Task LoadDataAsync()
         {
             try
             {
-                // Gửi request GET tới endpoint "categories", tự động giải tuần tự hóa chuỗi JSON thành List<CategoryDto>
-                var categories = await _client.GetFromJsonAsync<List<CategoryDto>>("categories");
-                dgvCategories.DataSource = categories; // Gán nguồn dữ liệu cho bảng hiển thị
+                using var client = GetAuthenticatedClient(); // Sử dụng client đã gắn token
+                var categories = await client.GetFromJsonAsync<List<CategoryDto>>("categories");
+                dgvCategories.DataSource = categories;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi kết nối Server: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi quyền truy cập hoặc mất kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+ 
         // Nút Tải lại dữ liệu (Refresh)
         private async void btnLoad_Click(object sender, EventArgs e)
         {

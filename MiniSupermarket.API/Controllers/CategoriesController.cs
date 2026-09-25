@@ -4,6 +4,7 @@
  * mô tả: Controller quản lý các thao tác CRUD cho nhóm hàng hóa trong siêu thị mini, bao gồm các phương thức để lấy danh sách, tìm kiếm, thêm mới, cập nhật và xóa nhóm hàng.
  * ngày tạo: 2024-06-15
  */
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniSupermarket.API.Models;
 
@@ -11,6 +12,8 @@ namespace MiniSupermarket.API.Controllers
 {
     [Route("api/[controller]")] // Định tuyến cơ sở: /api/categories
     [ApiController]
+    [Authorize] // Bắt buộc phải có Token mới gọi được các API trong Controller này
+
     public class CategoriesController : ControllerBase
     {
 
@@ -105,5 +108,24 @@ namespace MiniSupermarket.API.Controllers
             _categories.Remove(cat);
             return NoContent();
         }
+
+        // bổ sung theo buổi 2 thục hành
+        // 4. Kiểm tra quyền Admin (Chỉ tài khoản có Role = Admin mới được gọi)
+        [HttpGet("admin-dashboard")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult GetAdminDashboard()
+        {
+            return Ok(new { message = "Chào mừng Admin! Bạn có toàn quyền quản trị hệ thống siêu thị mini." });
+        }
+
+        // 5. Kiểm tra quyền chung cho nhân viên (Cả Admin và Cashier đều gọi được)
+        [HttpGet("staff-pos")]
+        [Authorize(Roles = "Admin,Cashier")]
+        public IActionResult GetStaffPos()
+        {
+            return Ok(new { message = "Màn hình POS Thu ngân sẵn sàng phục vụ bán hàng." });
+        }
+
+
     }
 }
