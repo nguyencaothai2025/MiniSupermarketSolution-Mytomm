@@ -53,6 +53,18 @@ Thử nghiệm các chức năng: Tải danh sách, Thêm mới, Sửa, Xóa và
 👨‍💻 5. Tác giả
 Họ tên sinh viên:Nguyễn Văn Tommy
 
+/////////////////////////////////////
+Buổi 2: Bỏ sung Authentication và Authorization với AuthController
+
+Lý thuyết: Nắm vững cơ chế xác thực không trạng thái (Stateless Authentication) với JWT (JSON Web Token), hiểu cách sử dụng
+Data Annotations để xác thực dữ liệu đầu vào và ứng dụng Action Filters để tùy biến vòng đời Request.
+
+Thực hành: Tích hợp AuthController cấp phát token vào dự án MiniSupermarket.API, đồng thời cập nhật WinForms Client
+để quản lý phiên đăng nhập và đính kèm Bearer Token khi gọi API.
+
+
+
+
 
 Mã sinh viên: 123456789
 
