@@ -3,6 +3,7 @@
  *  masv: 123456789
  *  mô tả: Lớp Category đại diện cho nhóm hàng hóa trong siêu thị mini, bao gồm các thuộc tính như mã định danh, tên nhóm hàng và mô tả chi tiết.
  *  ngày tạo: 2024-06-15
+ *  ngày đâu tiên thực hành
  */
 namespace MiniSupermarket.API.Models
 {
